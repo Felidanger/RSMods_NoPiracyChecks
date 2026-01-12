@@ -91,7 +91,7 @@ namespace RS2014_Mod_Installer
         public static void IsVoid(string installLocation) // Anti-Piracy Check (False = Real, True = Pirated) || Modified from Beat Saber Mod Assistant
         {
             string reason = string.Empty;
-            bool fakeSteamApi = true;
+            bool fakeSteamApi = false;
             try
             {
                 X509Certificate2 cert = new X509Certificate2(X509Certificate.CreateFromSignedFile(Path.Combine(installLocation, "steam_api.dll")));
