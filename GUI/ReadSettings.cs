@@ -31,7 +31,7 @@ namespace RSMods
                              ToggleSkylineWhen, RemoveLaneMarkersEnabled, RemoveLyricsEnabled, RemoveLyricsWhen, GuitarSpeakEnabled, RemoveHeadstockWhen, ScreenShotScores,
                              MidiAutoTuning, MidiAutoTuningDevice, MidiInDevice, MidiAutoTuningWhen, MidiSoftwareSemitoneTriggers, MidiSoftwareSemitoneSettings, MidiSoftwareTrueTuningTriggers, MidiSoftwareTrueTuningSettings, ChordsMode,
                              RiffRepeaterAboveHundred, ShowCurrentNoteOnScreen, OnScreenFont, OnScreenFontSize, ProfileToLoad, ShowSongTimerWhen, ShowSelectedVolumeWhen, SecondaryMonitor, RemoveSongPreviews, OverrideInputVolumeEnabled, OverrideInputVolumeDevice,
-                             AllowAudioInBackground, BypassTwoRTCMessageBox, LinearRiffRepeater, UseAlternativeOutputSampleRate, AllowLooping, AllowRewind, FixOculusCrash, FixBrokenTones, UseCustomNSPTimer, DisplayCurrentAccuracy, PreventMidSongPause,
+                             AllowAudioInBackground, BypassTwoRTCMessageBox, LinearRiffRepeater, UseAlternativeOutputSampleRate, AllowLooping, AllowRewind, FixOculusCrash, FixBrokenTones, UseCustomNSPTimer, DisplayCurrentAccuracy, PreventMidSongPause, RemoveFingerprints,
 
 
                              // String Colors
@@ -127,6 +127,7 @@ namespace RSMods
             ForceProfileEnabledIdentifier               = "ForceProfileLoad = ",
             FretlessModeEnabledIdentifier               = "Fretless = ",
             RemoveInlaysIdentifier                      = "Inlays = ",
+            RemoveFingerprintsIdentifier                = "RemoveFingerprints = ",
             ToggleLoftWhenIdentifier                    = "ToggleLoftWhen = ",
             ToggleSkylineWhenIdentifier                 = "ToggleSkylineWhen = ",
             RemoveLaneMarkersIdentifier                 = "LaneMarkers = ",
@@ -512,6 +513,8 @@ namespace RSMods
                     return FillSettingVariable(DisplayCurrentAccuracyIdentifier, SettingType.ON_OFF, currentLine, out DisplayCurrentAccuracy);
                 if (IdentifierIsFound(currentLine, PreventMidSongPauseIdentifier, identifierToGrab))
                     return FillSettingVariable(PreventMidSongPauseIdentifier, SettingType.ON_OFF, currentLine, out PreventMidSongPause);
+                if (IdentifierIsFound(currentLine, RemoveFingerprintsIdentifier, identifierToGrab))
+                    return FillSettingVariable(RemoveFingerprintsIdentifier, SettingType.ON_OFF, currentLine, out RemoveFingerprints);
 
                 #endregion
                 #region String Colors

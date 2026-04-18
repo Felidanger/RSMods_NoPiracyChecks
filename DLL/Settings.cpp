@@ -91,6 +91,7 @@ void Settings::Initialize()
 		{"UseCustomNSPTimer", "off"},
 		{"DisplayCurrentAccuracy", "off"},
 		{"PreventMidSongPause", "off"},
+		{"RemoveFingerprints", "off"},
 	};
 
 	customSettings = {
@@ -303,6 +304,7 @@ void Settings::ReadModSettings() {
 	modSettings["UseCustomNSPTimer"] = reader.GetValue("Toggle Switches", "UseCustomNSPTimer", "off");
 	modSettings["DisplayCurrentAccuracy"] = reader.GetValue("Toggle Switches", "DisplayCurrentAccuracy", "off");
 	modSettings["PreventMidSongPause"] = reader.GetValue("Toggle Switches", "PreventMidSongPause", "off");
+	modSettings["RemoveFingerprints"] = reader.GetValue("Toggle Switches", "RemoveFingerprints", "off");
 }
 
 /// <summary>

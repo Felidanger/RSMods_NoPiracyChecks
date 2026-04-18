@@ -5,9 +5,9 @@ namespace Keybindings {
 	std::map<std::string, ModCommand, std::less<>> keyUpCommands;
 	std::map<std::string, ModCommand, std::less<>> keyDownCommands;
 
-	void HandleTuningOffset() 
+	void HandleTuningOffset()
 	{
-		bool isCtrlPressed = GetKeyState(VK_CONTROL) & 0x8000;
+		bool isCtrlPressed = GetAsyncKeyState(VK_CONTROL) & 0x8000;
 
 		Midi::tuningOffset += isCtrlPressed ? -1 : 1;
 		Midi::tuningOffset = std::clamp(Midi::tuningOffset, -3, 12);
@@ -15,7 +15,7 @@ namespace Keybindings {
 		LOG_INFO("Triggered Mod Setting: Tuning Offset is now set to " << Midi::tuningOffset << std::endl);
 	}
 
-	void HandleRewind() 
+	void HandleRewind()
 	{
 		// SongTimer is stored in seconds, while RewindBy is stored in milliseconds.
 		// We need milliseconds to send to Wwise, so change SongTimer to milliseconds, then subtract the Rewind value.
@@ -38,9 +38,9 @@ namespace Keybindings {
 		LOG_INFO("(REWIND) Seeked to " << seekTo << "ms." << std::endl);
 	}
 
-	void SetLoopStartingPoint() 
+	void SetLoopStartingPoint()
 	{
-		if (GetKeyState(VK_CONTROL) & 0x8000) {
+		if (GetAsyncKeyState(VK_CONTROL) & 0x8000) {
 			loopStart = loopEnd = NULL;
 		}
 		else {
@@ -52,8 +52,8 @@ namespace Keybindings {
 	}
 
 	void SetLoopEndingPoint()
-	{ 
-		if (GetKeyState(VK_CONTROL) & 0x8000) {
+	{
+		if (GetAsyncKeyState(VK_CONTROL) & 0x8000) {
 			loopEnd = NULL;
 		}
 		else {
@@ -98,10 +98,10 @@ namespace Keybindings {
 		GameOverlay::currentVolumeIndex = 3;
 	}
 
-	void HandleRRSpeed() 
+	void HandleRRSpeed()
 	{
 		float realSongSpeed = RiffRepeater::GetSpeed(true);
-		bool isCtrlPressed = GetKeyState(VK_CONTROL) & 0x8000;
+		bool isCtrlPressed = GetAsyncKeyState(VK_CONTROL) & 0x8000;
 		auto interval = (float)Settings::GetModSetting("RRSpeedInterval");
 		realSongSpeed += isCtrlPressed ? -interval : interval;
 
@@ -118,7 +118,7 @@ namespace Keybindings {
 		LOG_INFO("Triggered Mod: Song Speed set to " << realSongSpeed << "%" << std::endl);
 	}
 
-	struct VolumeControlInfo 
+	struct VolumeControlInfo
 	{
 		std::string keyBindName;
 		std::string volumeChannel;
@@ -126,7 +126,7 @@ namespace Keybindings {
 	};
 
 
-	void HandleVolumeKeyPress(int keyPressed) 
+	void HandleVolumeKeyPress(int keyPressed)
 	{
 		if (Settings::ReturnSettingValue("VolumeControlEnabled") != "on") {
 			return;
@@ -144,7 +144,7 @@ namespace Keybindings {
 
 		for (const auto& control : controls) {
 			if (keyPressed == Settings::GetKeyBind(control.keyBindName)) {
-				if (GetKeyState(VK_CONTROL) & 0x8000) {
+				if (GetAsyncKeyState(VK_CONTROL) & 0x8000) {
 					VolumeControl::DecreaseVolume(Settings::GetModSetting("VolumeControlInterval"), control.volumeChannel);
 				}
 				else {
@@ -160,13 +160,13 @@ namespace Keybindings {
 		}
 	}
 
-	void HandleKeyUp(WPARAM keyPressed) 
+	void HandleKeyUp(WPARAM keyPressed)
 	{
 		if (!GameState::GameLoaded) return; // Game must not be on the startup videos or it will crash
 		DispatchCommand(keyPressed, keyUpCommands);
 
 		// Control + A. Force us to read the Settings from the INI again, to renew our cached values.
-		if (keyPressed == 0x41 && (GetKeyState(VK_CONTROL) & 0x8000)) {
+		if (keyPressed == 0x41 && (GetAsyncKeyState(VK_CONTROL) & 0x8000)) {
 			Settings::UpdateSettings();
 			LOG_INFO("Triggered Setting Update" << std::endl);
 		}
@@ -182,7 +182,7 @@ namespace Keybindings {
 		}
 	}
 
-	void HandleKeyDown(WPARAM keyPressed) 
+	void HandleKeyDown(WPARAM keyPressed)
 	{
 		if (!GameState::GameLoaded) return;
 		DispatchCommand(keyPressed, keyDownCommands);
@@ -224,7 +224,7 @@ namespace Keybindings {
 		}
 	}
 
-	void DispatchCommand(WPARAM keyPressed, const std::map<std::string, ModCommand, std::less<>>& commands) 
+	void DispatchCommand(WPARAM keyPressed, const std::map<std::string, ModCommand, std::less<>>& commands)
 	{
 		for (const auto& [key, value] : commands) {
 
@@ -240,108 +240,108 @@ namespace Keybindings {
 		}
 	}
 
-	void InitializeCommands() 
+	void InitializeCommands()
 	{
-		keyUpCommands["ToggleLoftKey"] = 
-		{ 
-			[] { return Settings::ReturnSettingValue("ToggleLoftEnabled") == "on"; }, 
-			[] { Loft::ToggleLoft(); }, 
-			"Toggle Loft" 
+		keyUpCommands["ToggleLoftKey"] =
+		{
+			[] { return Settings::ReturnSettingValue("ToggleLoftEnabled") == "on"; },
+			[] { Loft::ToggleLoft(); },
+			"Toggle Loft"
 		};
-		keyUpCommands["ShowSongTimerKey"] = 
-		{ 
-			[] { return Settings::ReturnSettingValue("ShowSongTimerEnabled") == "on"; }, 
-			[] { D3DHooks::showSongTimerOnScreen = !D3DHooks::showSongTimerOnScreen; }, 
-			"Show Song Timer" 
+		keyUpCommands["ShowSongTimerKey"] =
+		{
+			[] { return Settings::ReturnSettingValue("ShowSongTimerEnabled") == "on"; },
+			[] { D3DHooks::showSongTimerOnScreen = !D3DHooks::showSongTimerOnScreen; },
+			"Show Song Timer"
 		};
-		keyUpCommands["ForceReEnumerationKey"] = 
-		{ 
-			[] { return Settings::ReturnSettingValue("ForceReEnumerationEnabled") == "manual"; }, 
-			[] { Enumeration::ForceEnumeration(); }, 
-			"Force Enumeration" 
+		keyUpCommands["ForceReEnumerationKey"] =
+		{
+			[] { return Settings::ReturnSettingValue("ForceReEnumerationEnabled") == "manual"; },
+			[] { Enumeration::ForceEnumeration(); },
+			"Force Enumeration"
 		};
-		keyUpCommands["RainbowStringsKey"] = 
-		{ 
-			[] { return Settings::ReturnSettingValue("RainbowStringsEnabled") == "on"; }, 
-			[] { ERMode::ToggleRainbowMode(); 
-				 if (!ERMode::RainbowEnabled) ERMode::ResetAllStrings(); }, 
-			"Rainbow Strings" 
+		keyUpCommands["RainbowStringsKey"] =
+		{
+			[] { return Settings::ReturnSettingValue("RainbowStringsEnabled") == "on"; },
+			[] { ERMode::ToggleRainbowMode();
+				 if (!ERMode::RainbowEnabled) ERMode::ResetAllStrings(); },
+			"Rainbow Strings"
 		};
 		keyUpCommands["TuningOffsetKey"] =
-		{ 
-			[] { return Settings::ReturnSettingValue("AutoTuneForSong") == "on"; }, 
-			HandleTuningOffset, 
-			"" 
+		{
+			[] { return Settings::ReturnSettingValue("AutoTuneForSong") == "on"; },
+			HandleTuningOffset,
+			""
 		};
-		keyUpCommands["RewindKey"] = 
-		{ 
-			[] { return Settings::ReturnSettingValue("AllowRewind") == "on" && GameState::Menus::IsInLASPlayingModes(); }, 
-			HandleRewind, 
-			"" 
+		keyUpCommands["RewindKey"] =
+		{
+			[] { return Settings::ReturnSettingValue("AllowRewind") == "on" && GameState::Menus::IsInLASPlayingModes(); },
+			HandleRewind,
+			""
 		};
-		keyUpCommands["LoopStartKey"] = 
-		{ 
-			[] { return Settings::ReturnSettingValue("AllowLooping") == "on" && GameState::Menus::IsInModesWithAllowedFastRiffRepeater(); }, 
-			SetLoopStartingPoint, 
-			"Loop Start Point Set" 
+		keyDownCommands["LoopStartKey"] =
+		{
+			[] { return Settings::ReturnSettingValue("AllowLooping") == "on" && GameState::Menus::IsInModesWithAllowedFastRiffRepeater(); },
+			SetLoopStartingPoint,
+			"Loop Start Point Set"
 		};
-		keyUpCommands["LoopEndKey"] =
+		keyDownCommands["LoopEndKey"] =
 		{
 			[] { return Settings::ReturnSettingValue("AllowLooping") == "on" && GameState::Menus::IsInModesWithAllowedFastRiffRepeater(); },
 			SetLoopEndingPoint,
 			"Loop End Point Set"
 		};
-		keyUpCommands["RemoveLyricsKey"] = 
-		{ 
+		keyUpCommands["RemoveLyricsKey"] =
+		{
 			[] { return Settings::ReturnSettingValue("RemoveLyricsWhen") == "manual"; },
-			[] { D3DHooks::RemoveLyrics = !D3DHooks::RemoveLyrics; }, 
-			"Remove Lyrics" 
+			[] { D3DHooks::RemoveLyrics = !D3DHooks::RemoveLyrics; },
+			"Remove Lyrics"
 		};
-		keyUpCommands["ToggleExtendedRangeKey"] = 
-		{ 
-			[] { return true; }, 
+		keyUpCommands["ToggleExtendedRangeKey"] =
+		{
+			[] { return true; },
 			[] { ERMode::UseERExclusivelyInThisSong = !ERMode::UseERExclusivelyInThisSong; GameState::ToggleCB(ERMode::UseERExclusivelyInThisSong); },
-			"Toggle Extended Range" 
+			"Toggle Extended Range"
 		};
-		keyUpCommands["MutePlayer1Key"] = 
-		{ 
-			[] { return true; }, 
-			[] { HandleMutePlayer1(); }, 
-			"Mute Player 1" 
+		keyUpCommands["MutePlayer1Key"] =
+		{
+			[] { return true; },
+			[] { HandleMutePlayer1(); },
+			"Mute Player 1"
 		};
-		keyUpCommands["MutePlayer2Key"] = 
-		{ 
-			[] { return true; }, 
-			[] { HandleMutePlayer2(); }, 
-			"Mute Player 2" 
+		keyUpCommands["MutePlayer2Key"] =
+		{
+			[] { return true; },
+			[] { HandleMutePlayer2(); },
+			"Mute Player 2"
 		};
-		keyUpCommands["DisplayMixerKey"] = 
-		{ 
-			[] { return true; }, 
+		keyUpCommands["DisplayMixerKey"] =
+		{
+			[] { return true; },
 			[] { GameOverlay::displayMixer = false; }, // Hide the mixer if it is not actively being pressed
-			"" 
-		}; 	
-		keyUpCommands["ChangedSelectedVolumeKey"] = 
+			""
+		};
+		keyUpCommands["ChangedSelectedVolumeKey"] =
 		{
 			[] { return Settings::ReturnSettingValue("VolumeControlEnabled") == "on"; },
 			[] {
 					GameOverlay::currentVolumeIndex++;
 					if (GameOverlay::currentVolumeIndex > (GameOverlay::mixerInternalNames.size() - 1)) // There are only so many values we know we can edit, so loop back.
-						GameOverlay::currentVolumeIndex = 0;}, 
-			"" 
+						GameOverlay::currentVolumeIndex = 0;},
+			""
 		};
 
-		keyDownCommands["RRSpeedKey"] = 
-		{ 
-			[] { return Settings::ReturnSettingValue("RRSpeedAboveOneHundred") == "on" && GameState::Menus::IsInModesWithAllowedFastRiffRepeater() && RiffRepeater::loggedCurrentSongID; }, 
-			HandleRRSpeed, 
-			"" 
+		keyDownCommands["RRSpeedKey"] =
+		{
+			[] { return Settings::ReturnSettingValue("RRSpeedAboveOneHundred") == "on" && GameState::Menus::IsInModesWithAllowedFastRiffRepeater() && RiffRepeater::loggedCurrentSongID; },
+			HandleRRSpeed,
+			""
 		};
-		keyDownCommands["DisplayMixerKey"] = 
-		{ 
-			[] { return Settings::ReturnSettingValue("VolumeControlEnabled") == "on"; }, 
-			[] { GameOverlay::displayMixer = true; }, 
-			"Display Mixer" 
+		keyDownCommands["DisplayMixerKey"] =
+		{
+			[] { return Settings::ReturnSettingValue("VolumeControlEnabled") == "on"; },
+			[] { GameOverlay::displayMixer = true; },
+			"Display Mixer"
 		};
 	}
 }

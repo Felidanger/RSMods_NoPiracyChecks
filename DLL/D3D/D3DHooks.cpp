@@ -270,6 +270,21 @@ HRESULT APIENTRY D3DHooks::Hook_DIP(IDirect3DDevice9* pDevice, D3DPRIMITIVETYPE 
 
 	// Mods
 
+    bool RemoveFingerprints = Settings::ReturnSettingValue("RemoveFingerprints") == (std::string)"on";
+	if (RemoveFingerprints && IsExtraRemoved(fingerprintMeshes, currentThicc)) {
+		for (DWORD stage = 0; stage < 2; stage++) {
+			LPDIRECT3DBASETEXTURE9 pTuningTexBase = nullptr;
+			pDevice->GetTexture(stage, &pTuningTexBase);
+			if (pTuningTexBase) {
+				DWORD tuningCRC = 0;
+				if (D3D::CRCForTexture((LPDIRECT3DTEXTURE9)pTuningTexBase, pDevice, tuningCRC)) {
+					if (tuningCRC == crcFingerprintNumber || tuningCRC == crcFingerprintIcon) { pTuningTexBase->Release(); return REMOVE_TEXTURE; }
+				}
+				pTuningTexBase->Release();
+			}
+		}
+	}
+
 	// Change Noteway Color | This NEEDS to be above Extended Range / Custom Colors or it won't work.
 	if (IsToBeRemoved(noteHighway, current) && Settings::ReturnSettingValue("CustomHighwayColors") == (std::string)"on") {
 		pDevice->GetTexture(1, &pBaseNotewayTexture);

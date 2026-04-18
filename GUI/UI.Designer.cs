@@ -550,6 +550,8 @@
             this.label_SettingsSaved = new System.Windows.Forms.Label();
             this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
             this.button_UpdateRSMods = new System.Windows.Forms.Button();
+            this.groupBox_ToggleFingerprints = new System.Windows.Forms.GroupBox();
+            this.checkBox_RemoveFingerprints = new System.Windows.Forms.CheckBox();
             this.groupBox_HowToEnumerate.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nUpDown_ForceEnumerationXMS)).BeginInit();
             this.groupBox_LoftOffWhen.SuspendLayout();
@@ -1078,6 +1080,7 @@
             // 
             // groupBox_EnabledMods
             // 
+            this.groupBox_EnabledMods.Controls.Add(this.checkBox_RemoveFingerprints);
             this.groupBox_EnabledMods.Controls.Add(this.checkBox_PreventMidSongPause);
             this.groupBox_EnabledMods.Controls.Add(this.checkBox_DisplayCurrentAccuracy);
             this.groupBox_EnabledMods.Controls.Add(this.checkBox_CustomNSPTimer);
@@ -3325,6 +3328,7 @@
             // tabPage_ModSettings_DisableUI
             // 
             this.tabPage_ModSettings_DisableUI.BackColor = System.Drawing.Color.Azure;
+            this.tabPage_ModSettings_DisableUI.Controls.Add(this.groupBox_ToggleFingerprints);
             this.tabPage_ModSettings_DisableUI.Controls.Add(this.groupBox1);
             this.tabPage_ModSettings_DisableUI.Controls.Add(this.groupBox_OnScreenFont);
             this.tabPage_ModSettings_DisableUI.Controls.Add(this.groupBox_ToggleLyricsOffWhen);
@@ -4272,10 +4276,10 @@
             0,
             0});
             this.nUpDown_RiffRepeaterSpeed.Minimum = new decimal(new int[] {
-            1,
+            50,
             0,
             0,
-            0});
+            -2147483648});
             this.nUpDown_RiffRepeaterSpeed.Name = "nUpDown_RiffRepeaterSpeed";
             this.nUpDown_RiffRepeaterSpeed.Size = new System.Drawing.Size(153, 20);
             this.nUpDown_RiffRepeaterSpeed.TabIndex = 200;
@@ -6883,6 +6887,27 @@
             this.button_UpdateRSMods.Click += new System.EventHandler(this.CheckForUpdates_UpdateRSMods);
             this.button_UpdateRSMods.MouseHover += new System.EventHandler(this.ToolTips_Show);
             // 
+            // groupBox_ToggleFingerprints
+            // 
+            this.groupBox_ToggleFingerprints.Location = new System.Drawing.Point(6, 164);
+            this.groupBox_ToggleFingerprints.Name = "groupBox_ToggleFingerprints";
+            this.groupBox_ToggleFingerprints.Size = new System.Drawing.Size(168, 51);
+            this.groupBox_ToggleFingerprints.TabIndex = 71;
+            this.groupBox_ToggleFingerprints.TabStop = false;
+            this.groupBox_ToggleFingerprints.Text = "Toggle Fingerprints";
+            this.groupBox_ToggleFingerprints.Visible = false;
+            // 
+            // checkBox_ToggleFingerprints
+            // 
+            this.checkBox_RemoveFingerprints.AutoSize = true;
+            this.checkBox_RemoveFingerprints.Location = new System.Drawing.Point(11, 446);
+            this.checkBox_RemoveFingerprints.Name = "checkBox_ToggleFingerprints";
+            this.checkBox_RemoveFingerprints.Size = new System.Drawing.Size(123, 17);
+            this.checkBox_RemoveFingerprints.TabIndex = 0;
+            this.checkBox_RemoveFingerprints.Text = "Remove Fingerprints";
+            this.checkBox_RemoveFingerprints.UseVisualStyleBackColor = true;
+            this.checkBox_RemoveFingerprints.CheckedChanged += new System.EventHandler(this.Save_RemoveFingerprints);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -7585,5 +7610,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnSaveFontSize;
         private System.Windows.Forms.CheckBox checkBox_PreventMidSongPause;
+        private System.Windows.Forms.GroupBox groupBox_ToggleFingerprints;
+        private System.Windows.Forms.CheckBox checkBox_RemoveFingerprints;
     }
 }

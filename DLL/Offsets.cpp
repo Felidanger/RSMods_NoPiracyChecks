@@ -32,7 +32,7 @@ void Offsets::Initialize() {
 	xinputEnable = { {0x01360eac, baseHandle + 0x00F61EAC } };				// Code | 56 6a 00 8d b7 80 00 00 00 56 68 ? ? ? ? 68 00 08 00 00 50 (we want the static variable set before the get keystroke - XInputGetDSoundAudioDeviceGuids)
 	ptr_multiplayer = { {0x00F5F57C, 0x00F6057C} };							// Memory | Copied from timer
 	ptr_currentMenu = { {0x135F62C, baseHandle + 0x00F6062C} };				// Memory | Look for menu names with offset matching ptr_currentMenuOffsets; probably easiest way is by x-refing FECalibrationMeter and finding the place where it dereferences the pointer at the beginning of the function
-	ptr_timer = { {0x00F5F57C, 0x00F6057C} };								// Memory | Start song, keep narrowing down with song time increasing. Eventually do pointer map with ptr_timerBaseOffsets.
+	ptr_timer = { {0x00F5F62C, 0x00F6062C} };								// Memory | Start song, keep narrowing down with song time increasing. Eventually do pointer map with ptr_timerBaseOffsets.
 	ptr_timerRare = { {0x00F5F54C, 0x00F6054C} };							// Memory | Get ptr_timer, then subtract 0x30 from base address.
 	ptr_greyOutNoteTimer = { {0x00F5F62C, 0x00F6062C} };					// Memory | Copeied from loft
 	ptr_previewName = { {0x00F5F514, 0x00F60514} };							// Memory | Look for "Play_", add all results, then go scrolling through songs till you find an entry changing. Then pointer map with ptr_previewNameOffsets.
@@ -166,7 +166,7 @@ namespace Offsets { // Addresses for pre-2021 patch are in the comments
 	std::vector<unsigned int> ptr_preMainMenuOffsets{ 0x28, 0x8C };
 
 	// Timer
-	std::vector<unsigned int> ptr_timerBaseOffsets{ 0x34, 0x1C, 0x3C, 0x1F4, 0x98 };
+	std::vector<unsigned int> ptr_timerBaseOffsets{ 0xB0, 0x538, 0x8 };
 	std::vector<unsigned int> ptr_timerRareOffsets{ 0x20, 0x28, 0x0, 0x24, 0xC, 0x3B4 };
 
 	// Grey Out Note Timer
